@@ -8,9 +8,23 @@ namespace CustomTranslator.Win
     {
         private static bool ChinseToEnglish = false;
         private string url = @"http://103.172.182.110/api/TextTranslator?text={0}&from={1}&to={2}";
+        private KeyboardHook k_hook;
         public Main() 
         {
+            k_hook = new KeyboardHook();
+            k_hook.KeyDownEvent += new KeyEventHandler(hook_KeyDown);//钩住键按下
+            k_hook.Start();//安装键盘钩子
             InitializeComponent();
+        }
+
+        private void hook_KeyDown(object? sender, KeyEventArgs e)
+        {
+
+            if (e.KeyValue == (int)Keys.F && (int)Control.ModifierKeys == (int)Keys.Alt)
+            {
+                btnPasteCommit_Click(null, null);
+                this.Activate();
+            }
         }
 
         private void btnSwitch_Click(object sender, EventArgs e)
