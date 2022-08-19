@@ -1,5 +1,6 @@
 ﻿
 using AzureCognitive;
+using System.ComponentModel;
 using System.Text.Json;
 
 namespace CustomTranslator.Win
@@ -43,13 +44,38 @@ namespace CustomTranslator.Win
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
+            BackgroundWorker work = new BackgroundWorker();
+            work.DoWork += Work_DoWork;
+            work.RunWorkerAsync();
+        }
+
+        private void Work_DoWork(object? sender, DoWorkEventArgs e)
+        {
+            GetResponseFromAzure();
+        }
+
+        private void GetResponseFromAzure()
+        {
+            string reichText1 = "";
+            //string reichText2 = "";
+            if (richTextBox1.InvokeRequired)
+            {
+                richTextBox1.Invoke(new MethodInvoker(delegate { reichText1 = richTextBox1.Text; }));
+            }
             using (var httpClient = new HttpClient())
             {
-                var urlReal = new Uri(string.Format(url, richTextBox1.Text, ChinseToEnglish ? "zh-hans" : "en", !ChinseToEnglish ? "zh-hans" : "en"));
+                
+                var urlReal = new Uri(string.Format(url, reichText1, ChinseToEnglish ? "zh-hans" : "en", !ChinseToEnglish ? "zh-hans" : "en"));
                 var response = httpClient.GetAsync(urlReal).Result;
                 var data = response.Content.ReadAsStringAsync().Result;
                 var dataObj = JsonSerializer.Deserialize<List<TranslationsResponse>>(data);
-                richTextBox2.Text = dataObj?.FirstOrDefault()?.translations?.Where(x => x.to == (!ChinseToEnglish ? "zh-Hans" : "en")).FirstOrDefault()?.text;
+                if (richTextBox2.InvokeRequired)
+                {
+                    richTextBox2.Invoke(new MethodInvoker(delegate
+                    {
+                        richTextBox2.Text = dataObj?.FirstOrDefault()?.translations?.Where(x => x.to == (!ChinseToEnglish ? "zh-Hans" : "en")).FirstOrDefault()?.text;
+                    }));
+                }
             }
         }
 
@@ -65,14 +91,10 @@ namespace CustomTranslator.Win
             {
                 MessageBox.Show("目前剪贴板中数据不可转换为文本", "错误");
             }
-            using (var httpClient = new HttpClient())
-            {
-                var urlReal = new Uri(string.Format(url, richTextBox1.Text, ChinseToEnglish ? "zh-hans" : "en", !ChinseToEnglish ? "zh-hans" : "en"));
-                var response = httpClient.GetAsync(urlReal).Result;
-                var data = response.Content.ReadAsStringAsync().Result;
-                var dataObj = JsonSerializer.Deserialize<List<TranslationsResponse>>(data);
-                richTextBox2.Text = dataObj?.FirstOrDefault()?.translations?.Where(x => x.to == (!ChinseToEnglish ? "zh-Hans" : "en")).FirstOrDefault()?.text;
-            }
+
+            BackgroundWorker work = new BackgroundWorker();
+            work.DoWork += Work_DoWork;
+            work.RunWorkerAsync();
         }
     }
 }
