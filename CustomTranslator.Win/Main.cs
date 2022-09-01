@@ -22,7 +22,7 @@ namespace CustomTranslator.Win
 
         private void hook_KeyDown(object? sender, KeyEventArgs e)
         {
-            
+
             if (e.KeyValue == (int)Keys.C && (int)Control.ModifierKeys == (int)Keys.Control)
             {
                 if (currentKey == Keys.C.ToString() + Keys.Control.ToString() && (DateTime.UtcNow - currentTime).TotalMilliseconds < 500)
@@ -33,6 +33,14 @@ namespace CustomTranslator.Win
                 currentKey = Keys.C.ToString() + Keys.Control.ToString();
                 currentTime = DateTime.UtcNow;
             }
+            else if (e.KeyValue == (int)Keys.Enter)
+            {
+                BackgroundWorker work = new BackgroundWorker();
+                work.DoWork += Work_DoWork;
+                work.RunWorkerAsync();
+            }
+
+
         }
 
         private void btnSwitch_Click(object sender, EventArgs e)
