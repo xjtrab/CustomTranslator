@@ -8,7 +8,7 @@ namespace CustomTranslator.Win
     public partial class Main : Form
     {
         private static bool ChinseToEnglish = false;
-        private string url = @"http://110.42.246.176/api/TextTranslator?text={0}&from={1}&to={2}";
+        private string url = @"http://103.172.182.110/api/TextTranslator?text={0}&from={1}&to={2}";
         private KeyboardHook k_hook;
         private string currentKey = string.Empty;
         private DateTime currentTime = DateTime.UtcNow;
