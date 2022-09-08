@@ -49,9 +49,18 @@ namespace CustomTranslator.Win
             ChinseToEnglish = !ChinseToEnglish;
             lab1.Text = ChinseToEnglish ? "中文" : "English";
             lab2.Text = ChinseToEnglish ? "English" : "中文";
+            if (!string.IsNullOrEmpty(richTextBox1.Text))
+            {
+                GetResultAsync();
+            }
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)
+        {
+            GetResultAsync();
+        }
+
+        private void GetResultAsync()
         {
             BackgroundWorker work = new BackgroundWorker();
             work.DoWork += Work_DoWork;
