@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace CustomTranslator.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("customtranslator/api/[controller]")]
     [ApiController]
     public class TextTranslatorController : ControllerBase
     {
