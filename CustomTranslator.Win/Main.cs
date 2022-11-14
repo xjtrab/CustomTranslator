@@ -8,7 +8,7 @@ namespace CustomTranslator.Win
     public partial class Main : Form
     {
         private static bool ChinseToEnglish = false;
-        private string url = @"http://43.154.233.47/customtranslator/api/TextTranslator?text={0}&from={1}&to={2}";
+        private string url = @"http://43.154.233.47/customtranslator/api/TextTranslator?text={0}&from={1}&to={2}&ChinseToEnglish={3}";
         private KeyboardHook k_hook;
         private string currentKey = string.Empty;
         private DateTime currentTime = DateTime.UtcNow;
@@ -83,7 +83,7 @@ namespace CustomTranslator.Win
             using (var httpClient = new HttpClient())
             {
                 
-                var urlReal = new Uri(string.Format(url, reichText1, ChinseToEnglish ? "zh-hans" : "en", !ChinseToEnglish ? "zh-hans" : "en"));
+                var urlReal = new Uri(string.Format(url, reichText1, ChinseToEnglish ? "zh-hans" : "en", !ChinseToEnglish ? "zh-hans" : "en", ChinseToEnglish));
                 var response = httpClient.GetAsync(urlReal).Result;
                 var data = response.Content.ReadAsStringAsync().Result;
                 var dataObj = JsonSerializer.Deserialize<List<TranslationsResponse>>(data);

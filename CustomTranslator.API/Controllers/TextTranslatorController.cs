@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AzureCognitive;
+using CustomTranslator.API.DataAccess;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
@@ -11,19 +13,25 @@ namespace CustomTranslator.API.Controllers
     {
         private static readonly string key = "6ce115202ae949d39a36fe506777b502";
         private static readonly string endpoint = "https://api.cognitive.microsofttranslator.com";
+        private readonly TranslatorContext translatorContext;
+
+        public TextTranslatorController(TranslatorContext translatorContext)
+        {
+            this.translatorContext = translatorContext;
+        }
 
         // Add your location, also known as region. The default is global.
         // This is required if using a Cognitive Services resource and can be found in the Azure portal on the Keys and Endpoint page.
         private static readonly string location = "eastasia";
 
         [HttpGet(Name = "GetResult")]
-        public async Task<string> Get(string text,string from,string to)
+        public async Task<string> Get(string text,string from,string to,bool ChinseToEnglish)
         {
             // Input and output languages are defined as parameters.
             string route = $"/translate?api-version=3.0&from={from}&to=sw&to={to}";
             object[] body = new object[] { new { Text = text } };
             var requestBody = JsonSerializer.Serialize(body);
-
+            string result = string.Empty;
             using (var client = new HttpClient())
             using (var request = new HttpRequestMessage())
             {
@@ -37,9 +45,16 @@ namespace CustomTranslator.API.Controllers
                 // Send the request and get response.
                 HttpResponseMessage response = await client.SendAsync(request).ConfigureAwait(false);
                 // Read response as a string.
-                var result = await response.Content.ReadAsStringAsync();
-                return result;
+                result = await response.Content.ReadAsStringAsync();
             }
+
+            var dataObj = JsonSerializer.Deserialize<List<TranslationsResponse>>(result);
+
+            TranslatorHistory translatorHistory = new TranslatorHistory(text, dataObj?.FirstOrDefault()?.translations?.Where(x => x.to == (!ChinseToEnglish ? "zh-Hans" : "en")).FirstOrDefault()?.text, from, to, DateTime.UtcNow);
+            translatorContext.TranslatorHistorys.Add(translatorHistory);
+            await translatorContext.SaveChangesAsync();
+            return result;
+
         }
     }
 }
