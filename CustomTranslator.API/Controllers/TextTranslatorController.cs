@@ -13,12 +13,12 @@ namespace CustomTranslator.API.Controllers
     {
         private static readonly string key = "6ce115202ae949d39a36fe506777b502";
         private static readonly string endpoint = "https://api.cognitive.microsofttranslator.com";
-        private readonly TranslatorContext translatorContext;
+        //private readonly TranslatorContext translatorContext;
 
-        public TextTranslatorController(TranslatorContext translatorContext)
-        {
-            this.translatorContext = translatorContext;
-        }
+        //public TextTranslatorController(TranslatorContext translatorContext)
+        //{
+        //    this.translatorContext = translatorContext;
+        //}
 
         // Add your location, also known as region. The default is global.
         // This is required if using a Cognitive Services resource and can be found in the Azure portal on the Keys and Endpoint page.
@@ -47,12 +47,12 @@ namespace CustomTranslator.API.Controllers
                 // Read response as a string.
                 result = await response.Content.ReadAsStringAsync();
             }
-
+            /*
             var dataObj = JsonSerializer.Deserialize<List<TranslationsResponse>>(result);
-
             TranslatorHistory translatorHistory = new TranslatorHistory(text, dataObj?.FirstOrDefault()?.translations?.Where(x => x.to == (!ChinseToEnglish ? "zh-Hans" : "en")).FirstOrDefault()?.text, from, to, DateTime.UtcNow);
             translatorContext.TranslatorHistorys.Add(translatorHistory);
             await translatorContext.SaveChangesAsync();
+            */
             return result;
 
         }
