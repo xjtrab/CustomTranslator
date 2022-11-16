@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-/*
+
 // Replace with your connection string.
 var connectionString = builder.Configuration.GetConnectionString("TranslatorDatabase");
 
@@ -24,7 +24,7 @@ builder.Services.AddDbContext<TranslatorContext>(
         .EnableSensitiveDataLogging()
         .EnableDetailedErrors()
 );
-*/
+
 
 
 builder.Services.AddControllers();
@@ -34,7 +34,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-//await app.Services.GetRequiredService<TranslatorContext>().Database.MigrateAsync();
+await app.Services.CreateScope().ServiceProvider.GetService<TranslatorContext>().Database.MigrateAsync();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
