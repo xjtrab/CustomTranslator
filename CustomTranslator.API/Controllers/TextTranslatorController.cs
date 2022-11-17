@@ -50,8 +50,11 @@ namespace CustomTranslator.API.Controllers
 
             var dataObj = JsonSerializer.Deserialize<List<TranslationsResponse>>(result);
             TranslatorHistory translatorHistory = new TranslatorHistory(text, dataObj?.FirstOrDefault()?.translations?.Where(x => x.to == (!ChinseToEnglish ? "zh-Hans" : "en")).FirstOrDefault()?.text, from, to, DateTime.UtcNow);
-            translatorContext.TranslatorHistorys.Add(translatorHistory);
-            await translatorContext.SaveChangesAsync();
+            if (!translatorContext.TranslatorHistorys.Where(x => x.From == translatorHistory.From && x.FromText == translatorHistory.FromText).Any())
+            {
+                translatorContext.TranslatorHistorys.Add(translatorHistory);
+                await translatorContext.SaveChangesAsync();
+            }
 
             return result;
 
