@@ -78,7 +78,7 @@ namespace CustomTranslator.Win
             //string reichText2 = "";
             if (richTextBox1.InvokeRequired)
             {
-                richTextBox1.Invoke(new MethodInvoker(delegate { reichText1 = richTextBox1.Text; }));
+                richTextBox1.Invoke(new MethodInvoker(delegate { reichText1 = richTextBox1.Text.Trim('\n'); }));
             }
             using (var httpClient = new HttpClient())
             {
