@@ -42,8 +42,8 @@ stages:
     - task: SSH@0
       inputs:
         sshEndpoint: 'tengxun-docker-host'
-        runOptions: 'commands'
-        commands: |
+        runOptions: 'inline'
+        inline: |
           export buildno=$(Build.BuildId)
           cd /opt/teslamate
           pwd
