@@ -7,7 +7,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 RUN ["ls","-R"]
-COPY ["CustomTranslator.API.csproj", "CustomTranslator.API/"]
+COPY ["CustomTranslator.API.csproj", "/"]
 RUN dotnet restore "CustomTranslator.API.csproj"
 COPY . .
 WORKDIR "/src/CustomTranslator.API"
