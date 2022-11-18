@@ -44,7 +44,6 @@ stages:
         sshEndpoint: 'tengxun-docker-host'
         runOptions: 'commands'
         commands: |
-          sudo -i
           export buildno $(Build.BuildId)
           cd /opt/teslamate
           docker-compose up -d
