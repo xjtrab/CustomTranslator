@@ -36,6 +36,6 @@ stages:
     - task: CopyFilesOverSSH@0
       inputs:
         sshEndpoint: 'tengxun-docker-host'
-        contents: 'docker-compose.xml'
+        contents: 'docker-compose.yml'
         targetFolder: '/opt/teslamate'
         readyTimeout: '20000'
