@@ -24,7 +24,7 @@ stages:
       displayName: Build an image
       inputs:
         containerRegistry: 'dockerhub'
-        repository: 'xjtrab'
+        repository: 'xjtrab/customTranslator'
         command: 'build'
         Dockerfile: '**/Dockerfile'
     - task: Docker@2
