@@ -39,3 +39,12 @@ stages:
         contents: 'docker-compose.yml'
         targetFolder: '/opt/teslamate'
         readyTimeout: '20000'
+    - task: SSH@0
+      inputs:
+        sshEndpoint: 'tengxun-docker-host'
+        runOptions: 'commands'
+        commands: |
+          export buildno=$(Build.BuildId)
+          cd /opt/teslamate
+          dockercompse up -d
+        readyTimeout: '20000'
