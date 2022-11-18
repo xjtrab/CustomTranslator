@@ -84,7 +84,7 @@ services:
       - mosquitto-data:/mosquitto/data
 
   customtranslator:
-    image: xjtrab/customtranslatorapi:1.2
+    image: xjtrab/customtranslatorapi:${buildno:-lastest}
     restart: always
     depends_on:
       - mysql
