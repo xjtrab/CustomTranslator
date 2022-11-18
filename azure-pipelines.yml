@@ -46,7 +46,8 @@ stages:
         commands: |
           export buildno=$(Build.BuildId)
           cd /opt/teslamate
+          pwd
           ls
-          export ${buildno}
+          export $buildno
           docker-compose up -d
         readyTimeout: '20000'
