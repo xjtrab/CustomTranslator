@@ -33,3 +33,9 @@ stages:
         containerRegistry: 'dockerhub'
         repository: 'xjtrab/customtranslator'
         command: 'push'
+    - task: CopyFilesOverSSH@0
+      inputs:
+        sshEndpoint: 'tengxun-docker-host'
+        contents: 'docker-compose.xml'
+        targetFolder: '/opt/teslamate'
+        readyTimeout: '20000'
