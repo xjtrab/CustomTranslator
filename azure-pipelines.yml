@@ -47,4 +47,5 @@ stages:
           cd /opt/teslamate;
           sudo sed -i 's/##BUILD##/$(Build.BuildId)/g' docker-compose.yml;
           sudo docker-compose up -d;
+        failOnStdErr: false
         readyTimeout: '20000'
