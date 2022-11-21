@@ -45,6 +45,6 @@ stages:
         runOptions: 'inline'
         inline: |
           cd /opt/teslamate
-          sed -i 's/##BUILD##/$(Build.BuildId)/g' docker-compose.yaml
+          sudo sed -i 's/##BUILD##/$(Build.BuildId)/g' docker-compose.yml
           sudo docker-compose up -d
         readyTimeout: '20000'
