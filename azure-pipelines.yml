@@ -44,7 +44,7 @@ stages:
         sshEndpoint: 'tengxun-docker-host'
         runOptions: 'inline'
         inline: |
-          cd /opt/teslamate
-          sudo sed -i 's/##BUILD##/$(Build.BuildId)/g' docker-compose.yml
-          sudo docker-compose up -d &&  exit 0 || echo "Not working" 
+          cd /opt/teslamate;
+          sudo sed -i 's/##BUILD##/$(Build.BuildId)/g' docker-compose.yml;
+          sudo docker-compose up -d;
         readyTimeout: '20000'
