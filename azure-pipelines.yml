@@ -24,14 +24,14 @@ stages:
       displayName: Build an image
       inputs:
         containerRegistry: 'dockerhub'
-        repository: 'xjtrab/customTranslator'
+        repository: 'xjtrab/customTranslatorapi'
         command: 'build'
         Dockerfile: '**/Dockerfile'
     - task: Docker@2
       displayName: Push the image
       inputs:
         containerRegistry: 'dockerhub'
-        repository: 'xjtrab/customtranslator'
+        repository: 'xjtrab/customtranslatorapi'
         command: 'push'
     - task: CopyFilesOverSSH@0
       inputs:
