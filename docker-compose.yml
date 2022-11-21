@@ -84,7 +84,7 @@ services:
       - mosquitto-data:/mosquitto/data
 
   customtranslator:
-    image: xjtrab/customtranslatorapi:${Build.BuildId}
+    image: xjtrab/customtranslatorapi:${buildno}
     restart: always
     depends_on:
       - mysql
