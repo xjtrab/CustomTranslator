@@ -44,5 +44,5 @@ stages:
         sshEndpoint: 'tengxun-docker-host'
         runOptions: 'inline'
         inline: |
-          export buildno=$(Build.BuildId) && cd /opt/teslamate && sudo docker-compose up -d
+          sudo docker-compose up -d
         readyTimeout: '20000'
