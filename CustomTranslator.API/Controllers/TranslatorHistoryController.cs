@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CustomTranslator.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("customtranslator/api/[controller]")]
     [ApiController]
     public class TranslatorHistoryController : ControllerBase
     {
