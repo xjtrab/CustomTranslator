@@ -117,6 +117,7 @@ services:
       - "--global.sendAnonymousUsage=false"
       - "--providers.docker"
       - "--providers.docker.exposedByDefault=false"
+      - "--providers.file.directory=/opt/teslamate/config"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.tmhttpchallenge.acme.httpchallenge=true"
