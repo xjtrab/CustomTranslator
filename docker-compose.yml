@@ -32,6 +32,7 @@ services:
       - "traefik.http.routers.teslamate.rule=Host(`${FQDN_TM}`)"
       - "traefik.http.routers.teslamate.middlewares=teslamate-auth"
       - "traefik.http.routers.teslamate.entrypoints=websecure"
+      - "traefik.http.routers.teslamate.tls.certresolver=tmhttpchallenge"
     cap_drop:
       - all
 
@@ -71,6 +72,7 @@ services:
       - "traefik.http.routers.grafana-insecure.middlewares=redirect"
       - "traefik.http.routers.grafana.rule=Host(`${FQDN_TM}`) && (Path(`/grafana`) || PathPrefix(`/grafana/`))"
       - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls.certresolver=tmhttpchallenge"
   mosquitto:
     image: eclipse-mosquitto:2
     restart: always
@@ -118,6 +120,10 @@ services:
       - "--providers.file.directory=/opt/teslamate/config"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.tmhttpchallenge.acme.httpchallenge=true"
+      - "--certificatesresolvers.tmhttpchallenge.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.tmhttpchallenge.acme.email=${LETSENCRYPT_EMAIL}"
+      - "--certificatesresolvers.tmhttpchallenge.acme.storage=/etc/acme/acme.json"
       - "--log.level=DEBUG"
     ports:
       - 80:80
