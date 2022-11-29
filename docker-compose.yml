@@ -117,7 +117,7 @@ services:
       - "--providers.docker.exposedByDefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      - "--providers.file.filename=/opt/teslamate/config/ssl.yml"
+      - "--providers.file.filename=./config/ssl.yml"
       - "--providers.file.watch=true"
       - "--log.level=DEBUG"
     ports:
