@@ -140,5 +140,3 @@ volumes:
   mosquitto-conf:
   mosquitto-data:
   mysql-db:
-
-https://community.traefik.io/t/use-traefik-with-self-signed-certificate/8733/4
