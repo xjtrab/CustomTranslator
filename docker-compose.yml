@@ -117,7 +117,7 @@ services:
       - "--providers.docker.exposedByDefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      - "--providers.file.filename=./config/ssl.yml"
+      - "--providers.file.filename=/etc/ssl/ssl.yml"
       - "--providers.file.watch=true"
       - "--log.level=DEBUG"
     ports:
@@ -126,6 +126,7 @@ services:
       - 8080:8080
     volumes:
       - ./.htpasswd:/auth/.htpasswd
+      - ./config/:/etc/ssl/
       - /var/run/docker.sock:/var/run/docker.sock:ro
 volumes:
   teslamate-db:
