@@ -123,6 +123,8 @@ services:
       - "--certificatesresolvers.tmhttpchallenge.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.tmhttpchallenge.acme.email=${LETSENCRYPT_EMAIL}"
       - "--certificatesresolvers.tmhttpchallenge.acme.storage=/etc/acme/acme.json"
+      - "--providers.file.filename=/opt/teslamate/config/ssl.yml"
+      - "--providers.file.watch=true"
       - "--log.level=DEBUG"
     ports:
       - 80:80
