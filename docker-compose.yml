@@ -127,6 +127,7 @@ services:
     volumes:
       - ./.htpasswd:/auth/.htpasswd
       - ./config/:/etc/ssl/
+      - ./.ssl/:/opt/teslamate/.ssl/
       - /var/run/docker.sock:/var/run/docker.sock:ro
 volumes:
   teslamate-db:
