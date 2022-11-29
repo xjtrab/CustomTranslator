@@ -7,9 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomTranslator.API", "Cus
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{964C89D4-04B9-49C2-8837-C1147A936C99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureCognitive", "AzureCognitive\AzureCognitive.csproj", "{1FBC57E6-E95D-4BB1-94AF-8C0432AD1E2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureCognitive", "AzureCognitive\AzureCognitive.csproj", "{1FBC57E6-E95D-4BB1-94AF-8C0432AD1E2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomTranslator.Win", "CustomTranslator.Win\CustomTranslator.Win.csproj", "{C3EF664F-C86E-499F-9620-5727DD02FCFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomTranslator.Win", "CustomTranslator.Win\CustomTranslator.Win.csproj", "{C3EF664F-C86E-499F-9620-5727DD02FCFF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3FF26A5B-F7C0-4D34-95F2-9881AF33A9AE}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

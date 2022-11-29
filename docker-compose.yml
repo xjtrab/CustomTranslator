@@ -117,7 +117,6 @@ services:
       - "--global.sendAnonymousUsage=false"
       - "--providers.docker"
       - "--providers.docker.exposedByDefault=false"
-      - "--providers.file.directory=/opt/teslamate/config"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.tmhttpchallenge.acme.httpchallenge=true"
@@ -133,10 +132,11 @@ services:
       - ./.htpasswd:/auth/.htpasswd
       - ./acme/:/etc/acme/
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./.ssl/:/etc/certs/
 volumes:
   teslamate-db:
   teslamate-grafana-data:
   mosquitto-conf:
   mosquitto-data:
   mysql-db:
+
+https://community.traefik.io/t/use-traefik-with-self-signed-certificate/8733/4
