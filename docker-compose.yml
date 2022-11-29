@@ -126,7 +126,6 @@ services:
       - 8080:8080
     volumes:
       - ./.htpasswd:/auth/.htpasswd
-      - ./acme/:/etc/acme/
       - /var/run/docker.sock:/var/run/docker.sock:ro
 volumes:
   teslamate-db:
