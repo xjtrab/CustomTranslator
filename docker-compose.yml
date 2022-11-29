@@ -119,7 +119,6 @@ services:
       - "--entrypoints.websecure.address=:443"
       - "--providers.file.filename=/etc/ssl/ssl.yml"
       - "--providers.file.watch=true"
-      - "--log.level=DEBUG"
     ports:
       - 80:80
       - 443:443
