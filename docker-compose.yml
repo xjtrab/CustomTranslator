@@ -28,7 +28,7 @@ services:
       - "traefik.http.routers.teslamate-ws.rule=Host(`${FQDN_TM}`) && Path(`/live/websocket`)"
       - "traefik.http.routers.teslamate-ws.entrypoints=websecure"
       - "traefik.http.routers.teslamate-ws.tls"
-      - "traefik.http.routers.teslamate.rule=Host(`m3.${FQDN_TM}`)"
+      - "traefik.http.routers.teslamate.rule=Host(`m3.`+`${FQDN_TM}`)"
       - "traefik.http.routers.teslamate.middlewares=teslamate-auth"
       - "traefik.http.routers.teslamate.entrypoints=websecure"
       - "traefik.http.routers.teslamate.tls=true"
