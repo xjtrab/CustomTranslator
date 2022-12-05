@@ -21,7 +21,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.port=4000"
-      - "traefik.http.middlewares.redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.teslamate-auth.basicauth.realm=teslamate"
       - "traefik.http.middlewares.teslamate-auth.basicauth.usersfile=/auth/.htpasswd"
       - "traefik.http.routers.teslamate-insecure.rule=Host(`${FQDN_TM}`)"
@@ -32,7 +31,7 @@ services:
       - "traefik.http.routers.teslamate.rule=Host(`${FQDN_TM}`)"
       - "traefik.http.routers.teslamate.middlewares=teslamate-auth"
       - "traefik.http.routers.teslamate.entrypoints=websecure"
-      - "traefik.http.routers.teslamate.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.routers.teslamate.tls=true"
     cap_drop:
       - all
 
@@ -67,12 +66,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.port=3000"
-      - "traefik.http.middlewares.redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.grafana-insecure.rule=Host(`${FQDN_TM}`)"
       - "traefik.http.routers.grafana-insecure.middlewares=redirect"
       - "traefik.http.routers.grafana.rule=Host(`${FQDN_TM}`) && (Path(`/grafana`) || PathPrefix(`/grafana/`))"
       - "traefik.http.routers.grafana.entrypoints=websecure"
-      - "traefik.http.routers.grafana.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.routers.grafana.tls=true"
   mosquitto:
     image: eclipse-mosquitto:2
     restart: always
@@ -97,7 +95,8 @@ services:
       - "traefik.enable=true"
       - "traefik.port=80"
       - "traefik.http.routers.customtranslator.rule=Host(`${FQDN_TM}`) && (Path(`/customtranslator`) || PathPrefix(`/customtranslator/`))"
-      - "traefik.http.routers.customtranslator.entrypoints=web"
+      - "traefik.http.routers.customtranslator.entrypoints=websecure"
+      - "traefik.http.routers.customtranslator.tls=true"
   mysql:
     image: mysql:5.7.24
     restart: always
@@ -119,10 +118,8 @@ services:
       - "--providers.docker.exposedByDefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.tmhttpchallenge.acme.httpchallenge=true"
-      - "--certificatesresolvers.tmhttpchallenge.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.tmhttpchallenge.acme.email=${LETSENCRYPT_EMAIL}"
-      - "--certificatesresolvers.tmhttpchallenge.acme.storage=/etc/acme/acme.json"
+      - "--providers.file.filename=/etc/ssl/ssl.yml"
+      - "--providers.file.watch=true"
       - "--log.level=DEBUG"
     ports:
       - 80:80
@@ -130,8 +127,17 @@ services:
       - 8080:8080
     volumes:
       - ./.htpasswd:/auth/.htpasswd
-      - ./acme/:/etc/acme/
+      - ./config/:/etc/ssl/
+      - ./.ssl/:/opt/teslamate/.ssl/
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      # global redirect to https
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=web"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+
+      # middleware redirect
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 volumes:
   teslamate-db:
   teslamate-grafana-data:
