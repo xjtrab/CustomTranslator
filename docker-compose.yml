@@ -96,8 +96,8 @@ services:
       - "traefik.enable=true"
       - "traefik.port=80"
       - "traefik.http.routers.customtranslator.rule=Host(`43.154.233.47`) && (Path(`/customtranslator`) || PathPrefix(`/customtranslator/`))"
-      - "traefik.http.routers.customtranslator.entrypoints=websecure"
-      - "traefik.http.routers.customtranslator.tls=true"
+      - "traefik.http.routers.customtranslator.entrypoints=web"
+      #- "traefik.http.routers.customtranslator.tls=true"
 
   mysql:
     image: mysql:5.7.24
