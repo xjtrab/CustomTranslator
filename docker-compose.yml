@@ -71,6 +71,7 @@ services:
       - "traefik.http.routers.grafana.rule=Host(`${FQDN_TM}`) && (Path(`/grafana`) || PathPrefix(`/grafana/`))"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls=true"
+
   mosquitto:
     image: eclipse-mosquitto:2
     restart: always
@@ -94,9 +95,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.port=80"
-      - "traefik.http.routers.customtranslator.rule=Host(`${FQDN_TM}`) && (Path(`/customtranslator`) || PathPrefix(`/customtranslator/`))"
+      - "traefik.http.routers.customtranslator.rule=Host(`43.154.233.47`) && (Path(`/customtranslator`) || PathPrefix(`/customtranslator/`))"
       - "traefik.http.routers.customtranslator.entrypoints=websecure"
       - "traefik.http.routers.customtranslator.tls=true"
+
   mysql:
     image: mysql:5.7.24
     restart: always
@@ -108,6 +110,7 @@ services:
       - MYSQL_DATABASE=translator
     volumes:
       - mysql-db:/var/lib/mysql
+
   proxy:
     image: traefik:v2.9
     restart: always
