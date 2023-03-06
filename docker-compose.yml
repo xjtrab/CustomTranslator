@@ -95,7 +95,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.port=80"
-      - "traefik.http.routers.customtranslator.rule=Host(`43.154.233.47`) && (Path(`/customtranslator`) || PathPrefix(`/customtranslator/`))"
+      - "traefik.http.routers.customtranslator.rule=Host(`xjtrab.com`) && (Path(`/customtranslator`) || PathPrefix(`/customtranslator/`))"
       - "traefik.http.routers.customtranslator.entrypoints=web"
       #- "traefik.http.routers.customtranslator.tls=true"
 
