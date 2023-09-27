@@ -1,6 +1,10 @@
 ﻿
 using AzureCognitive;
+using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
+using OpenAI_API;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace CustomTranslator.Win
@@ -9,15 +13,18 @@ namespace CustomTranslator.Win
     {
         private static bool ChinseToEnglish = false;
         private string url = @"http://43.154.233.47/customtranslator/api/TextTranslator?text={0}&from={1}&to={2}&ChinseToEnglish={3}";
+        private string OpenAIKey = Environment.GetEnvironmentVariable("OpenAIKey");
         private KeyboardHook k_hook;
         private string currentKey = string.Empty;
         private DateTime currentTime = DateTime.UtcNow;
-        public Main() 
+        OpenAIAPI openAIAPI = null;
+        public Main()
         {
             k_hook = new KeyboardHook();
             k_hook.KeyDownEvent += new KeyEventHandler(hook_KeyDown);//钩住键按下
             k_hook.Start();//安装键盘钩子
             InitializeComponent();
+            openAIAPI = new OpenAIAPI(OpenAIKey);
         }
 
         private void hook_KeyDown(object? sender, KeyEventArgs e)
@@ -70,6 +77,24 @@ namespace CustomTranslator.Win
         private void Work_DoWork(object? sender, DoWorkEventArgs e)
         {
             GetResponseFromAzure();
+            //GetAIResponse();
+        }
+
+        private void GetAIResponse()
+        {
+            var chat = openAIAPI.Chat.CreateConversation();
+
+            string reichText1 = "";
+            if (richTextBox1.InvokeRequired)
+            {
+                richTextBox1.Invoke(new MethodInvoker(delegate { reichText1 = richTextBox1.Text.Trim('\n'); }));
+            }
+            // now let's ask it a question'
+            chat.AppendUserInput(reichText1);
+            // and get the response
+            string response = chat.GetResponseFromChatbotAsync().GetAwaiter().GetResult();
+            this.richTextBox3.Text = response;
+
         }
 
         private void GetResponseFromAzure()
@@ -82,7 +107,7 @@ namespace CustomTranslator.Win
             }
             using (var httpClient = new HttpClient())
             {
-                
+
                 var urlReal = new Uri(string.Format(url, reichText1, ChinseToEnglish ? "zh-hans" : "en", !ChinseToEnglish ? "zh-hans" : "en", ChinseToEnglish));
                 var response = httpClient.GetAsync(urlReal).Result;
                 var data = response.Content.ReadAsStringAsync().Result;
@@ -113,6 +138,61 @@ namespace CustomTranslator.Win
             BackgroundWorker work = new BackgroundWorker();
             work.DoWork += Work_DoWork;
             work.RunWorkerAsync();
+        }
+
+        private async void btnListen_Click(object sender, EventArgs e)
+        {
+            var config = SpeechConfig.FromSubscription("92255497bf4e497c835faa364e2719b8", "eastus");
+            using var audioConfigStream = AudioInputStream.CreatePushStream();
+            using var audioConfig = AudioConfig.FromStreamInput(audioConfigStream);
+            using var speechRecognizer = new SpeechRecognizer(config, audioConfig);
+
+            var stopRecognition = new TaskCompletionSource<int>();
+
+            speechRecognizer.Recognizing += (s, e) =>
+            {
+                //richTextBox3.Text += $"RECOGNIZING: Text={e.Result.Text}";
+                Debug.WriteLine($"RECOGNIZING: Text={e.Result.Text}");
+            };
+
+            speechRecognizer.Recognized += (s, e) =>
+            {
+                if (e.Result.Reason == ResultReason.RecognizedSpeech)
+                {
+                    //richTextBox3.Text += $"RECOGNIZED: Text={e.Result.Text}";
+                    Debug.WriteLine($"RECOGNIZED: Text={e.Result.Text}");
+                }
+                else if (e.Result.Reason == ResultReason.NoMatch)
+                {
+                    Debug.WriteLine($"NOMATCH: Speech could not be recognized.");
+                }
+            };
+
+            speechRecognizer.Canceled += (s, e) =>
+            {
+                Debug.WriteLine($"CANCELED: Reason={e.Reason}");
+
+                if (e.Reason == CancellationReason.Error)
+                {
+                    Debug.WriteLine($"CANCELED: ErrorCode={e.ErrorCode}");
+                    Debug.WriteLine($"CANCELED: ErrorDetails={e.ErrorDetails}");
+                    Debug.WriteLine($"CANCELED: Did you set the speech resource key and region values?");
+                }
+
+                stopRecognition.TrySetResult(0);
+            };
+
+            speechRecognizer.SessionStopped += (s, e) =>
+            {
+                Console.WriteLine("\n    Session stopped event.");
+                stopRecognition.TrySetResult(0);
+            };
+
+            await speechRecognizer.StartContinuousRecognitionAsync();
+            this.btnListen.Enabled = false;
+            // Waits for completion. Use Task.WaitAny to keep the task rooted.
+            Task.WaitAny(new[] { stopRecognition.Task });
+            this.btnListen.Enabled = true;
         }
     }
 }

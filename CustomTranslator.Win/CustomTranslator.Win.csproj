@@ -14,6 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.32.1" />
+    <PackageReference Include="OpenAI" Version="1.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AzureCognitive\AzureCognitive.csproj" />
   </ItemGroup>
 

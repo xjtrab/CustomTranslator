@@ -34,7 +34,6 @@ services:
       - "traefik.http.routers.teslamate.tls=true"
     cap_drop:
       - all
-
   database:
     image: postgres:13
     restart: always
@@ -44,6 +43,7 @@ services:
       - POSTGRES_DB=${TM_DB_NAME}
     volumes:
       - teslamate-db:/var/lib/postgresql/data
+
 
   grafana:
     image: teslamate/grafana:latest
