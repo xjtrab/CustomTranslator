@@ -128,7 +128,9 @@ namespace CustomTranslator.Win
             if (iData.GetDataPresent(DataFormats.Text))
             {
                 //如果剪贴板中的数据是文本格式 
-                this.richTextBox1.Text = (string)iData.GetData(DataFormats.Text);//检索与指定格式相关联的数据 
+                string text = (string)iData.GetData(DataFormats.Text);//检索与指定格式相关联的数据 
+                text = text.Replace("\r\n", " ");
+                this.richTextBox1.Text = text;
             }
             else
             {
