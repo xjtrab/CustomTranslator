@@ -48,13 +48,16 @@ namespace CustomTranslator.API.Controllers
                 result = await response.Content.ReadAsStringAsync();
             }
 
-            var dataObj = JsonSerializer.Deserialize<List<TranslationsResponse>>(result);
-            TranslatorHistory translatorHistory = new TranslatorHistory(text, dataObj?.FirstOrDefault()?.translations?.Where(x => x.to == (!ChinseToEnglish ? "zh-Hans" : "en")).FirstOrDefault()?.text, from, to, DateTime.UtcNow);
-            if (!translatorContext.TranslatorHistorys.Where(x => x.From == translatorHistory.From && x.FromText == translatorHistory.FromText).Any())
+            Task.Run(async () =>
             {
-                translatorContext.TranslatorHistorys.Add(translatorHistory);
-                await translatorContext.SaveChangesAsync();
-            }
+                var dataObj = JsonSerializer.Deserialize<List<TranslationsResponse>>(result);
+                TranslatorHistory translatorHistory = new TranslatorHistory(text, dataObj?.FirstOrDefault()?.translations?.Where(x => x.to == (!ChinseToEnglish ? "zh-Hans" : "en")).FirstOrDefault()?.text, from, to, DateTime.UtcNow);
+                if (!translatorContext.TranslatorHistorys.Where(x => x.From == translatorHistory.From && x.FromText == translatorHistory.FromText).Any())
+                {
+                    translatorContext.TranslatorHistorys.Add(translatorHistory);
+                    await translatorContext.SaveChangesAsync();
+                }
+            });
 
             return result;
 
