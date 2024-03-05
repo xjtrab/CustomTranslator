@@ -43,6 +43,11 @@ services:
       - POSTGRES_DB=${TM_DB_NAME}
     volumes:
       - teslamate-db:/var/lib/postgresql/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.postgres.rule=Host(`database.xjtrab.com`)"
+      - "traefik.http.routers.postgres.entryPoints=web"
+      - "traefik.http.services.postgres.loadbalancer.server.port=5432"
 
 
   grafana:
