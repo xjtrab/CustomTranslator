@@ -20,9 +20,9 @@ builder.Services.AddDbContext<TranslatorContext>(
         .UseMySql(string.Format(connectionString, Environment.GetEnvironmentVariable("DATABASE_HOST")), serverVersion)
         // The following three options help with debugging, but should
         // be changed or removed for production.
-        .LogTo(Console.WriteLine, LogLevel.Debug)
-        .EnableSensitiveDataLogging()
-        .EnableDetailedErrors()
+        //.LogTo(Console.WriteLine, LogLevel.Debug)
+        //.EnableSensitiveDataLogging()
+        //.EnableDetailedErrors()
 );
 
 
