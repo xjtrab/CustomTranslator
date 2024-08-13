@@ -2,6 +2,7 @@
 using CustomTranslator.API.DataAccess;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
 
@@ -14,10 +15,12 @@ namespace CustomTranslator.API.Controllers
         private static readonly string key = "6ce115202ae949d39a36fe506777b502";
         private static readonly string endpoint = "https://api.cognitive.microsofttranslator.com";
         private readonly TranslatorContext translatorContext;
+        private readonly ILogger<TextTranslatorController> logger;  
 
-        public TextTranslatorController(TranslatorContext translatorContext)
+        public TextTranslatorController(TranslatorContext translatorContext, ILogger<TextTranslatorController> logger)
         {
             this.translatorContext = translatorContext;
+            this.logger = logger;   
         }
 
         // Add your location, also known as region. The default is global.
@@ -47,16 +50,22 @@ namespace CustomTranslator.API.Controllers
                 // Read response as a string.
                 result = await response.Content.ReadAsStringAsync();
             }
-
+            logger.LogInformation("database start");
             Task.Run(async () =>
             {
+                logger.LogInformation("database task start");
+
                 var dataObj = JsonSerializer.Deserialize<List<TranslationsResponse>>(result);
                 TranslatorHistory translatorHistory = new TranslatorHistory(text, dataObj?.FirstOrDefault()?.translations?.Where(x => x.to == (!ChinseToEnglish ? "zh-Hans" : "en")).FirstOrDefault()?.text, from, to, DateTime.UtcNow);
                 if (!translatorContext.TranslatorHistorys.Where(x => x.From == translatorHistory.From && x.FromText == translatorHistory.FromText).Any())
                 {
+                    logger.LogInformation("database no recored then add");
+
                     translatorContext.TranslatorHistorys.Add(translatorHistory);
                     await translatorContext.SaveChangesAsync();
                 }
+                logger.LogInformation("database end");
+
             });
 
             return result;
