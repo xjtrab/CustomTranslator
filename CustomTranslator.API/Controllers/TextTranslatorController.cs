@@ -50,23 +50,11 @@ namespace CustomTranslator.API.Controllers
                 // Read response as a string.
                 result = await response.Content.ReadAsStringAsync();
             }
-            logger.LogInformation("database start");
-            Task.Run(async () =>
-            {
-                logger.LogInformation("database task start");
-
-                var dataObj = JsonSerializer.Deserialize<List<TranslationsResponse>>(result);
-                TranslatorHistory translatorHistory = new TranslatorHistory(text, dataObj?.FirstOrDefault()?.translations?.Where(x => x.to == (!ChinseToEnglish ? "zh-Hans" : "en")).FirstOrDefault()?.text, from, to, DateTime.UtcNow);
-                if (!translatorContext.TranslatorHistorys.Where(x => x.From == translatorHistory.From && x.FromText == translatorHistory.FromText).Any())
-                {
-                    logger.LogInformation("database no recored then add");
-
-                    translatorContext.TranslatorHistorys.Add(translatorHistory);
-                    await translatorContext.SaveChangesAsync();
-                }
-                logger.LogInformation("database end");
-
-            });
+            var dataObj = JsonSerializer.Deserialize<List<TranslationsResponse>>(result);
+            TranslatorHistory translatorHistory = new TranslatorHistory(text, dataObj?.FirstOrDefault()?.translations?.Where(x => x.to == (!ChinseToEnglish ? "zh-Hans" : "en")).FirstOrDefault()?.text, from, to, DateTime.UtcNow);
+            translatorContext.TranslatorHistorys.Add(translatorHistory);
+            await translatorContext.SaveChangesAsync();
+         
 
             return result;
 
